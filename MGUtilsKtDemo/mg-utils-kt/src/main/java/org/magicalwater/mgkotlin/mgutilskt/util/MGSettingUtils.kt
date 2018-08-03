@@ -3,31 +3,41 @@ package org.magicalwater.mgkotlin.mgutilskt.util
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import org.magicalwater.mgkotlin.mgutilskt.security.MGSecuritySharedPreference
 
 /**
  * Created by magicalwater on 2018/1/23.
  * 存放本地資料 Preference 的地方
  */
-class MGSettingUtils {
+class MGSettingUtils private constructor() {
 
+    val SETTING_NAME: String = "SETTING_NAME"
 
     companion object {
-
-        private val SETTING_NAME: String = "SETTING_NAME"
-
-        var prefs: SharedPreferences? = null
-
-        //初始化 SharePreferences
-        fun initPrefs(context: Context) {
-            prefs = context.getSharedPreferences(SETTING_NAME, Context.MODE_PRIVATE)
-        }
+        val shared: MGSettingUtils = MGSettingUtils()
+        private var prefs: MGSecuritySharedPreference? = null
     }
 
+    //初始化 SharePreferences, 第二個參數微當 prefs 已經存在時是否重新實例化
+    fun init(context: Context, resetIfExist: Boolean = false): MGSettingUtils {
+        if (prefs == null || resetIfExist) {
+            prefs = MGSecuritySharedPreference(context, SETTING_NAME, Context.MODE_PRIVATE)
+        }
+        return this
+    }
+
+    /**
+     * @param isAsync - 是否異步存入
+     * */
     @SuppressLint("CommitPrefEdits")
-    fun <T> put(name: String, value: T) {
+    fun put(name: String, value: Any?, isAsync: Boolean = true) {
         val prefs = prefs
         if (prefs == null) {
             MGLogUtils.d("尚未初始化 SharedPreferences, 無法存入 $name -> $value")
+            return
+        }
+        if (value == null) {
+            remove(name, isAsync)
             return
         }
         with(prefs.edit()) {
@@ -38,14 +48,14 @@ class MGSettingUtils {
                 is Boolean -> putBoolean(name, value)
                 is Float -> putFloat(name, value)
                 else -> throw IllegalArgumentException("SharedPreferences can't be save this type")
-            }.apply()
+            }
+            if (isAsync) apply()
+            else commit()
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> get(name: String, default: T): T = with(prefs) {
-
-
+    fun <T> get(name: String, default: T): T {
         val prefs = prefs
         if (prefs == null) {
             MGLogUtils.d("尚未初始化 SharedPreferences, 無法讀取 $name , 因此返回預設值")
@@ -63,7 +73,22 @@ class MGSettingUtils {
             }
             return res as T
         }
+    }
 
+    /**
+     * @param isAsync - 是否異步刪除
+     * */
+    fun remove(name: String, isAsync: Boolean = true) {
+        val prefs = prefs
+        if (prefs == null) {
+            MGLogUtils.d("尚未初始化 SharedPreferences, 無法刪除 $name")
+            return
+        }
+        with(prefs.edit()) {
+            remove(name)
+            if (isAsync) apply()
+            else commit()
+        }
     }
 
 }

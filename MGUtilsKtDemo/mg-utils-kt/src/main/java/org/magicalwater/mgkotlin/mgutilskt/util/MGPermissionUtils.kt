@@ -59,7 +59,7 @@ class MGPermissionUtils {
         //所以須先檢查app是否第一次開啟並且要求權限
         val prompt = activity.shouldShowRequestPermissionRationale(permission)
 
-        val settingUtils = MGSettingUtils()
+        val settingUtils = MGSettingUtils.shared.init(activity)
         val isFirstRequest = settingUtils.get(KEY_FIRST_REQUEST, true)
 
         if (!isFirstRequest && !prompt) {
