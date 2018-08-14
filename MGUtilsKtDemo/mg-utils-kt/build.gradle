@@ -51,7 +51,7 @@ dependencies {
 apply plugin: 'com.novoda.bintray-release'
 
 //項目主頁
-def siteUrl = 'https://github.com/CrazyDavis/MGUtilsKt'
+def siteUrl = 'https://github.com/MagicalWater/MGUtilsKt'
 
 //bintray上傳參考: https://blog.csdn.net/qq_23179075/article/details/71123452
 publish{
