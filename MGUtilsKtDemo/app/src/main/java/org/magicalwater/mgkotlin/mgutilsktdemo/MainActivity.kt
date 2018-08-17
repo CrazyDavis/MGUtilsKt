@@ -11,6 +11,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        MGImgLoadUtils.load(mImgView, R.drawable.ic_demo2, MGImgLoadUtils.Shape.NORMAL, 64.0f)
+        MGImgLoadUtils.load(mImgView, R.drawable.ic_demo2, MGImgLoadUtils.ImageAttr(MGImgLoadUtils.Shape.ROUND, 64f))
     }
 }
