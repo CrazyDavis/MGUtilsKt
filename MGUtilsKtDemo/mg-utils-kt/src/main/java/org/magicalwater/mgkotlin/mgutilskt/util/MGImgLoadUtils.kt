@@ -31,7 +31,7 @@ class MGImgLoadUtils {
         /**
          * @param from - 可傳入 drawable resId, URL, String, Uri, 分別代表從資源/網路/網路/檔案拉圖
          * */
-        fun loadBitmap(context: Context, from: Any, attr: ImageAttr, handler: (Bitmap) -> Unit) {
+        fun loadBitmap(context: Context, from: Any, attr: ImageAttr = ImageAttr(), handler: (Bitmap) -> Unit) {
             val target = object: SimpleTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap?, glideAnimation: GlideAnimation<in Bitmap>?) {
                     if (resource != null) handler(resource)
@@ -40,7 +40,7 @@ class MGImgLoadUtils {
             loadBitmapByGlide(context, from, attr)?.into(target)
         }
 
-        fun loadDrawable(context: Context, from: Any, attr: ImageAttr, handler: (GlideDrawable) -> Unit) {
+        fun loadDrawable(context: Context, from: Any, attr: ImageAttr = ImageAttr(), handler: (GlideDrawable) -> Unit) {
             val target = object: SimpleTarget<GlideDrawable>() {
                 override fun onResourceReady(resource: GlideDrawable?, glideAnimation: GlideAnimation<in GlideDrawable>?) {
                     if (resource != null) handler(resource)
@@ -50,7 +50,7 @@ class MGImgLoadUtils {
         }
 
         //直接將資源圖片載入進 imageView
-        fun load(view: ImageView, from: Any, attr: ImageAttr) {
+        fun load(view: ImageView, from: Any, attr: ImageAttr = ImageAttr()) {
             loadDrawableByGilde(view.context, from, attr)?.into(view)
         }
 
