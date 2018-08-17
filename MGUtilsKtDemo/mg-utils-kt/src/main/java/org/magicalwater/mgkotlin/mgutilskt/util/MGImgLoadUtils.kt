@@ -28,7 +28,7 @@ class MGImgLoadUtils {
 
     companion object {
 
-        fun load(context: Context, @DrawableRes resId: Int, shape: Shape, radius: Float? = null, width: Int? = null, height: Int? = null, handler: (Bitmap) -> Unit) {
+        fun load(context: Context, @DrawableRes resId: Int, shape: Shape = Shape.NORMAL, radius: Float? = null, width: Int? = null, height: Int? = null, handler: (Bitmap) -> Unit) {
             val target = object: SimpleTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap?, glideAnimation: GlideAnimation<in Bitmap>?) {
                     if (resource != null) handler(resource)
@@ -37,7 +37,7 @@ class MGImgLoadUtils {
             loadBitmapByGlide(context, resId, getTransform(context, shape, radius), width, height)?.into(target)
         }
 
-        fun load(context: Context, resId: Int, shape: Shape, radius: Float? = null, handler: (GlideDrawable) -> Unit) {
+        fun load(context: Context, resId: Int, shape: Shape = Shape.NORMAL, radius: Float? = null, handler: (GlideDrawable) -> Unit) {
             val target = object: SimpleTarget<GlideDrawable>() {
                 override fun onResourceReady(resource: GlideDrawable?, glideAnimation: GlideAnimation<in GlideDrawable>?) {
                     if (resource != null) handler(resource)
@@ -47,17 +47,17 @@ class MGImgLoadUtils {
         }
 
         //直接將資源圖片載入進 imageView
-        fun load(view: ImageView, @DrawableRes resId: Int, shape: Shape, radius: Float? = null) {
+        fun load(view: ImageView, @DrawableRes resId: Int, shape: Shape = Shape.NORMAL, radius: Float? = null) {
             loadDrawableByGilde(view.context, resId, getTransform(view.context, shape, radius))?.into(view)
         }
 
         //從網路撈圖片進 imageView
-        fun load(view: ImageView, url: URL, shape: Shape, radius: Float? = null) {
+        fun load(view: ImageView, url: URL, shape: Shape = Shape.NORMAL, radius: Float? = null) {
             loadDrawableByGilde(view.context, url.toString(), getTransform(view.context, shape, radius))?.into(view)
         }
 
         //從網路撈圖片, 返回指定的圖片, 將圖片設定為指定寬高
-        fun load(context: Context, url: URL, shape: Shape, radius: Float? = null, handler: (Bitmap) -> Unit) {
+        fun load(context: Context, url: URL, shape: Shape = Shape.NORMAL, radius: Float? = null, handler: (Bitmap) -> Unit) {
             val target = object: SimpleTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap?, glideAnimation: GlideAnimation<in Bitmap>?) {
                     if (resource != null) handler(resource)
@@ -67,7 +67,7 @@ class MGImgLoadUtils {
         }
 
         //傳入uri(本地圖片檔案), 返回指定的圖片, 將圖片設定為指定寬高
-        fun load(context: Context, uri: Uri, shape: Shape, radius: Float? = null, width: Int? = null, height: Int? = null, handler: (Bitmap) -> Unit) {
+        fun load(context: Context, uri: Uri, shape: Shape = Shape.NORMAL, radius: Float? = null, width: Int? = null, height: Int? = null, handler: (Bitmap) -> Unit) {
             val target = object: SimpleTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap?, glideAnimation: GlideAnimation<in Bitmap>?) {
                     if (resource != null) handler(resource)
@@ -76,17 +76,13 @@ class MGImgLoadUtils {
             loadBitmapByGlide(context, uri, getTransform(context, shape, radius), width, height)?.into(target)
         }
 
-
-        fun getTransform(context: Context, type: Shape, radius: Float? = null): BitmapTransformation? {
+        private fun getTransform(context: Context, type: Shape, radius: Float? = null): BitmapTransformation? {
             return when (type) {
                 Shape.NORMAL ->  null
                 Shape.CIRCLE -> MGGlideCircleTransformation(context)
                 Shape.ROUND -> MGGlideRoundTransformation(context, radius ?: 0f)
             }
         }
-
-
-
 
         private fun <T> loadByGlide(context: Context, from: T): DrawableTypeRequest<T>? {
              val b = when (from) {
