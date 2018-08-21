@@ -13,6 +13,9 @@ import org.magicalwater.mgkotlin.mgextensionkt.px
  */
 class MGRichTextUtils {
 
+    private var attrs: MutableList<RichAttr> = mutableListOf()
+
+    private var defaultSize = 12.px
 
     //設置字體樣式, 從上而下分別是, 正常, 粗體, 斜體, 粗斜體
     companion object {
@@ -40,11 +43,62 @@ class MGRichTextUtils {
         val FONT_BOLD_ITALIC = "BOLD_ITALIC"
     }
 
+    //設置預設字體大小, 已設置的文字大小不會改變, 之後進行append的才會改變
+    fun setDefaultTextSize(size: Int): MGRichTextUtils {
+        this.defaultSize = size
+        return this
+    }
+
+    //呼叫此方法設置字串, 此方法會清空所有已設置數值
+    fun setString(text: String): MGRichTextUtils {
+        attrs.clear()
+        return appendString(text)
+    }
+
+    //增加字串
+    fun appendString(text: String): MGRichTextUtils {
+        val attr = RichAttr(text, defaultSize)
+        attrs.add(attr)
+        return this
+    }
+
+    //設置當前最後一串文字的屬性
+    fun setTextColor(color: Int): MGRichTextUtils {
+        attrs.last().color = color
+        return this
+    }
+
+    //設置當前最後一串文字的屬性
+    fun setTextSize(size: Int): MGRichTextUtils {
+        attrs.last().size = size
+        return this
+    }
+
+    //設置當前最後一串文字的屬性
+    fun setFontType(type: RichFontType): MGRichTextUtils {
+        attrs.last().font = type
+        return this
+    }
+
+    //設置當前最後一串文字的屬性
+    fun setTextDelete(isDelete: Boolean): MGRichTextUtils {
+        attrs.last().delete = isDelete
+        return this
+    }
+
+    fun build(): SpannableStringBuilder {
+        val string = comb(attrs)
+
+        //build後清除所有設置的資料
+        attrs.clear()
+
+        return string
+    }
+
     //組合多個屬性字串
     fun comb(vararg attr: RichAttr): SpannableStringBuilder {
         return comb(attr.toList())
     }
-
 
     fun comb(attr: List<RichAttr>): SpannableStringBuilder {
         var richList: MutableList<Map<String,Any>> = mutableListOf()
