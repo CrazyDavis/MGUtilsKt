@@ -5,6 +5,7 @@
 所有工具類的封裝
 
 ## 版本  
+0.1.3 - 加入壓縮/解壓縮工具　MGZipUtils, Drawable創建工具　MGDrawableUtils  
 0.1.2 - 修改富文本工具 MGRichTextUtils 創建方式, 更便於使用  
 0.1.1 - 修改 圖片載入工具 MGImgUtils 傳入參數  
 0.1.0 - 圖片載入工具 MGImgUtils 添加可選 一般/圓角/圓形 圖片載入  
