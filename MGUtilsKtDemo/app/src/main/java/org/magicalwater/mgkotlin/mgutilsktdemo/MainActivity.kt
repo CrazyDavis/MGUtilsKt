@@ -5,6 +5,7 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
 import org.magicalwater.mgkotlin.mgutilskt.util.MGImgLoadUtils
 import org.magicalwater.mgkotlin.mgutilskt.util.MGRichTextUtils
+import org.magicalwater.mgkotlin.mgutilskt.util.MGVersionUtils
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,5 +24,10 @@ class MainActivity : AppCompatActivity() {
                 .appendString("第四段自訂大小文字\n")
                 .setTextSize(120)
                 .build()
+
+
+        //比較版號
+        val isNew = MGVersionUtils.compareIsNew("0.0.1", "0.0.1.0.0.0.0.1")
+        println("版號是否比較新: $isNew")
     }
 }

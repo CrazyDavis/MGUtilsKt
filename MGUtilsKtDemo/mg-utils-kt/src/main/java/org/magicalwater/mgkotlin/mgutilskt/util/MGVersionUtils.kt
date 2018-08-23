@@ -1,26 +1,38 @@
 package org.magicalwater.mgkotlin.mgutilskt.util
 
+import kotlin.math.max
 import kotlin.math.min
 
 class MGVersionUtils {
     companion object {
         fun compareIsNew(ori: String, new: String): Boolean {
-            val oriArray = ori.split(".")
-            val newArray = new.split(".")
-            val minLength = min(oriArray.count(), newArray.count())
-            var isNew = false
-            (0 until minLength).forEach {
-                if (newArray[it].toInt() > oriArray[it].toInt()) {
-                    isNew = true
-                }
+            val oriArray = ori.split(".").toMutableList()
+            val newArray = new.split(".").toMutableList()
+//            val minLength = min(oriArray.size, newArray.size)
+            val maxLength = max(oriArray.size, newArray.size)
 
-                if (isNew) return@forEach
+            //比較短的那邊補上缺少的長度, 內容為0
+            if (maxLength > oriArray.size) {
+                oriArray.addAll(
+                        List(maxLength - oriArray.size) { "0" }
+                )
+            } else if (maxLength > newArray.size) {
+                newArray.addAll(
+                        List(maxLength - newArray.size) { "0" }
+                )
             }
-            //假如版本號碼完全一樣, 檢查 new的長度是否比ori長, 若是比較長也是有新版本
-            if (!isNew) {
-                isNew = newArray.count() > oriArray.count()
+
+            (0 until maxLength).forEach {
+                val oriInt = oriArray[it].toInt()
+                val newInt = newArray[it].toInt()
+                when {
+                    oriInt > newInt -> return false
+                    newInt > oriInt -> return true
+                    else -> {}
+                }
+//                println("跑迴圈 $it")
             }
-            return isNew
+            return false
         }
     }
 }
